@@ -1,0 +1,38 @@
+android {
+  defaultConfig {
+    multiDexEnabled true
+  }
+}
+
+buildscript {
+  repositories {
+    google()
+    jcenter()
+    maven {
+      url 'https://maven.fabric.io/public'
+    }
+  }
+  dependencies {
+    classpath 'com.google.gms:google-services:4.3.4'
+    classpath 'com.android.tools.build:gradle:4.1.1'
+    classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+  }
+}
+
+
+repositories {
+  google()
+  mavenCentral()
+  maven {
+    url "https://maven.google.com"
+  }
+}
+
+dependencies {
+  implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
+}
+
+cdvPluginPostBuildExtras.add({
+  apply plugin: 'com.google.gms.google-services'
+  apply plugin: 'io.fabric'
+})
