@@ -36,7 +36,7 @@ function addDependencies(buildGradle, context) {
       fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
     } else {
       googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.1.0\' // google-services dependency from cordova-plugin-firebase';
-      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.25.4\' // fabric dependency from cordova-plugin-firebase'
+      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.28.0\' // fabric dependency from cordova-plugin-firebase'
     }
   
     var modifiedLine = match[0] + '\n' + googlePlayDependency + '\n' + fabricDependency;
@@ -86,7 +86,7 @@ function addRepos(buildGradle) {
     var modifiedLine = match[0] + '\n' + fabricMavenRepo;
 
     // modify the actual line
-    buildGradle = buildGradle.replace(/^(\s*) repos/m, modifiedLine);
+    buildGradle = buildGradle.replace(/^(\s*) repositories repos/m, modifiedLine);
 
     // update the all projects grouping
     var allProjectsIndex = buildGradle.indexOf('allprojects');
