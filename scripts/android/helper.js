@@ -35,7 +35,7 @@ function addDependencies(buildGradle, context) {
       googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
       fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
     } else {
-      googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3'\' // google-services dependency from cordova-plugin-firebase';
+      googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
       fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
     }
   
