@@ -82,7 +82,7 @@ function addRepos(buildGradle) {
 
     // modify the line to add the necessary repo
     // Crashlytics goes under buildscripts which is the first grouping in the file
-    var fabricMavenRepo = whitespace + '{ maven { url \'https://maven.fabric.io/public\' } } // Fabrics Maven repository from cordova-plugin-firebase'
+    var fabricMavenRepo = whitespace + 'repositories { maven { url \'https://maven.fabric.io/public\' } } // Fabrics Maven repository from cordova-plugin-firebase'
     var modifiedLine = match[0] + '\n' + fabricMavenRepo;
 
     // modify the actual line
@@ -97,20 +97,20 @@ function addRepos(buildGradle) {
 
       // Add google() to the allprojects section of the string
       match = secondHalfOfFile.match(/^(\s*) repositories repos/m);
-      var googlesMavenRepo = whitespace + '{ google() \n mavenCentral() } // Google\'s Maven repository from cordova-plugin-firebase';
+      var googlesMavenRepo = whitespace + 'repositories { google() \n mavenCentral() } // Google\'s Maven repository from cordova-plugin-firebase';
       modifiedLine = match[0] + '\n' + googlesMavenRepo;
       // modify the part of the string that is after 'allprojects'
-      secondHalfOfFile = secondHalfOfFile.replace(/^(\s*) repos/m, modifiedLine);
+      secondHalfOfFile = secondHalfOfFile.replace(/^(\s*) repositories repos/m, modifiedLine);
 
       // recombine the modified line
       buildGradle = firstHalfOfFile + secondHalfOfFile;
     } else {
       // this should not happen, but if it does, we should try to add the dependency to the buildscript
       match = buildGradle.match(/^(\s*) repositories repos/m);
-      var googlesMavenRepo = whitespace + '{ google() \n mavenCentral() } // Google\'s Maven repository from cordova-plugin-firebase';
+      var googlesMavenRepo = whitespace + 'repositories { google() \n mavenCentral() } // Google\'s Maven repository from cordova-plugin-firebase';
       modifiedLine = match[0] + '\n' + googlesMavenRepo;
       // modify the part of the string that is after 'allprojects'
-      buildGradle = buildGradle.replace(/^(\s*) repos/m, modifiedLine);
+      buildGradle = buildGradle.replace(/^(\s*) repositories repos/m, modifiedLine);
     }
   }else{
     // find the known line to match
