@@ -33,10 +33,10 @@ function addDependencies(buildGradle, context) {
     var fabricDependency;
     if (sdk >= 28) {
       googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
-      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
+      fabricDependency = whitespace + 'classpath \'com.google.firebase:firebase-crashlytics-gradle:2.4.1\' // fabric dependency from cordova-plugin-firebase'
     } else {
       googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
-      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
+      fabricDependency = whitespace + 'classpath \'com.google.firebase:firebase-crashlytics-gradle:2.4.1\' // fabric dependency from cordova-plugin-firebase'
     }
   
     var modifiedLine = match[0] + '\n' + googlePlayDependency + '\n' + fabricDependency;
@@ -77,9 +77,9 @@ function addRepos(buildGradle) {
   var match;
   match = buildGradle.match(/^(\s*)jcenter\(\)/m);
   if(match == null){
-    match = match = buildGradle.match(/^(\s*) repositories repos/m);
+    match = buildGradle.match(/^(\s*) repositories repos/m);
     var whitespace = match[1];
-
+    /*
     // modify the line to add the necessary repo
     // Crashlytics goes under buildscripts which is the first grouping in the file
     var fabricMavenRepo = whitespace + 'repositories { maven { url \'https://maven.fabric.io/public\' } } // Fabrics Maven repository from cordova-plugin-firebase'
@@ -87,7 +87,7 @@ function addRepos(buildGradle) {
 
     // modify the actual line
     buildGradle = buildGradle.replace(/^(\s*) repositories repos/m, modifiedLine);
-
+    */
     // update the all projects grouping
     var allProjectsIndex = buildGradle.indexOf('allprojects');
     if (allProjectsIndex > 0) {
