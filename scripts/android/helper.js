@@ -20,25 +20,53 @@ function readRootBuildGradle() {
  */
 function addDependencies(buildGradle, context) {
   // find the known line to match
-  var match = buildGradle.match(/^(\s*)classpath 'com.android.tools.build(.*)/m);
-  var whitespace = match[1];
+
+  var match;
+  match = buildGradle.match(/^(\s*)classpath 'com.android.tools.build(.*)/m);
+  if(match == null){
+    match = buildGradle.match(/^(\s*)classpath "com.android.tools.build(.*)/m);
+    var whitespace = match[1];
+    
+    // modify the line to add the necessary dependencies
+    var sdk = utils.getAndroidTargetSdk(context);
+    var googlePlayDependency;
+    var fabricDependency;
+    if (sdk >= 28) {
+      googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
+      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
+    } else {
+      googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.1.0\' // google-services dependency from cordova-plugin-firebase';
+      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.25.4\' // fabric dependency from cordova-plugin-firebase'
+    }
   
-  // modify the line to add the necessary dependencies
-  var sdk = utils.getAndroidTargetSdk(context);
-  var googlePlayDependency;
-  var fabricDependency;
-  if (sdk >= 28) {
-    googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
-    fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
-  } else {
-    googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.1.0\' // google-services dependency from cordova-plugin-firebase';
-    fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.25.4\' // fabric dependency from cordova-plugin-firebase'
+    var modifiedLine = match[0] + '\n' + googlePlayDependency + '\n' + fabricDependency;
+
+    buildGradle = buildGradle.replace(/^(\s*)classpath "com.android.tools.build(.*)/m, modifiedLine);
+    
+  }else{
+    var match = buildGradle.match(/^(\s*)classpath 'com.android.tools.build(.*)/m);
+    var whitespace = match[1];
+    
+    // modify the line to add the necessary dependencies
+    var sdk = utils.getAndroidTargetSdk(context);
+    var googlePlayDependency;
+    var fabricDependency;
+    if (sdk >= 28) {
+      googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
+      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
+    } else {
+      googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.1.0\' // google-services dependency from cordova-plugin-firebase';
+      fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.25.4\' // fabric dependency from cordova-plugin-firebase'
+    }
+  
+    var modifiedLine = match[0] + '\n' + googlePlayDependency + '\n' + fabricDependency;
+
+    buildGradle = buildGradle.replace(/^(\s*)classpath 'com.android.tools.build(.*)/m, modifiedLine);
   }
 
-  var modifiedLine = match[0] + '\n' + googlePlayDependency + '\n' + fabricDependency;
-  
   // modify the actual line
-  return buildGradle.replace(/^(\s*)classpath 'com.android.tools.build(.*)/m, modifiedLine);
+  return buildGradle;
+
 }
 
 /*
@@ -46,42 +74,83 @@ function addDependencies(buildGradle, context) {
  */
 function addRepos(buildGradle) {
   // find the known line to match
-  var match = buildGradle.match(/^(\s*)jcenter\(\)/m);
-  var whitespace = match[1];
+  var match;
+  match = buildGradle.match(/^(\s*)jcenter\(\)/m);
+  if(match == null){
+    match = match = buildGradle.match(/^(\s*) repositories repos/m);
+    var whitespace = match[1];
 
-  // modify the line to add the necessary repo
-  // Crashlytics goes under buildscripts which is the first grouping in the file
-  var fabricMavenRepo = whitespace + 'maven { url \'https://maven.fabric.io/public\' } // Fabrics Maven repository from cordova-plugin-firebase'
-  var modifiedLine = match[0] + '\n' + fabricMavenRepo;
+    // modify the line to add the necessary repo
+    // Crashlytics goes under buildscripts which is the first grouping in the file
+    var fabricMavenRepo = whitespace + '{ maven { url \'https://maven.fabric.io/public\' } } // Fabrics Maven repository from cordova-plugin-firebase'
+    var modifiedLine = match[0] + '\n' + fabricMavenRepo;
 
-  // modify the actual line
-  buildGradle = buildGradle.replace(/^(\s*)jcenter\(\)/m, modifiedLine);
+    // modify the actual line
+    buildGradle = buildGradle.replace(/^(\s*) repos/m, modifiedLine);
 
-  // update the all projects grouping
-  var allProjectsIndex = buildGradle.indexOf('allprojects');
-  if (allProjectsIndex > 0) {
-    // split the string on allprojects because jcenter is in both groups and we need to modify the 2nd instance
-    var firstHalfOfFile = buildGradle.substring(0, allProjectsIndex);
-    var secondHalfOfFile = buildGradle.substring(allProjectsIndex);
+    // update the all projects grouping
+    var allProjectsIndex = buildGradle.indexOf('allprojects');
+    if (allProjectsIndex > 0) {
+      // split the string on allprojects because jcenter is in both groups and we need to modify the 2nd instance
+      var firstHalfOfFile = buildGradle.substring(0, allProjectsIndex);
+      var secondHalfOfFile = buildGradle.substring(allProjectsIndex);
 
-    // Add google() to the allprojects section of the string
-    match = secondHalfOfFile.match(/^(\s*)jcenter\(\)/m);
-    var googlesMavenRepo = whitespace + 'google() // Google\'s Maven repository from cordova-plugin-firebase';
-    modifiedLine = match[0] + '\n' + googlesMavenRepo;
-    // modify the part of the string that is after 'allprojects'
-    secondHalfOfFile = secondHalfOfFile.replace(/^(\s*)jcenter\(\)/m, modifiedLine);
+      // Add google() to the allprojects section of the string
+      match = secondHalfOfFile.match(/^(\s*) repositories repos/m);
+      var googlesMavenRepo = whitespace + 'google() // Google\'s Maven repository from cordova-plugin-firebase';
+      modifiedLine = match[0] + '\n' + googlesMavenRepo;
+      // modify the part of the string that is after 'allprojects'
+      secondHalfOfFile = secondHalfOfFile.replace(/^(\s*) repos/m, modifiedLine);
 
-    // recombine the modified line
-    buildGradle = firstHalfOfFile + secondHalfOfFile;
-  } else {
-    // this should not happen, but if it does, we should try to add the dependency to the buildscript
-    match = buildGradle.match(/^(\s*)jcenter\(\)/m);
-    var googlesMavenRepo = whitespace + 'google() // Google\'s Maven repository from cordova-plugin-firebase';
-    modifiedLine = match[0] + '\n' + googlesMavenRepo;
-    // modify the part of the string that is after 'allprojects'
+      // recombine the modified line
+      buildGradle = firstHalfOfFile + secondHalfOfFile;
+    } else {
+      // this should not happen, but if it does, we should try to add the dependency to the buildscript
+      match = buildGradle.match(/^(\s*) repositories repos/m);
+      var googlesMavenRepo = whitespace + 'google() // Google\'s Maven repository from cordova-plugin-firebase';
+      modifiedLine = match[0] + '\n' + googlesMavenRepo;
+      // modify the part of the string that is after 'allprojects'
+      buildGradle = buildGradle.replace(/^(\s*) repos/m, modifiedLine);
+    }
+  }else{
+    // find the known line to match
+    var match = buildGradle.match(/^(\s*)jcenter\(\)/m);
+    var whitespace = match[1];
+
+    // modify the line to add the necessary repo
+    // Crashlytics goes under buildscripts which is the first grouping in the file
+    var fabricMavenRepo = whitespace + 'maven { url \'https://maven.fabric.io/public\' } // Fabrics Maven repository from cordova-plugin-firebase'
+    var modifiedLine = match[0] + '\n' + fabricMavenRepo;
+
+    // modify the actual line
     buildGradle = buildGradle.replace(/^(\s*)jcenter\(\)/m, modifiedLine);
-  }
 
+    // update the all projects grouping
+    var allProjectsIndex = buildGradle.indexOf('allprojects');
+    if (allProjectsIndex > 0) {
+        // split the string on allprojects because jcenter is in both groups and we need to modify the 2nd instance
+        var firstHalfOfFile = buildGradle.substring(0, allProjectsIndex);
+        var secondHalfOfFile = buildGradle.substring(allProjectsIndex);
+
+        // Add google() to the allprojects section of the string
+        match = secondHalfOfFile.match(/^(\s*)jcenter\(\)/m);
+        var googlesMavenRepo = whitespace + 'google() // Google\'s Maven repository from cordova-plugin-firebase';
+        modifiedLine = match[0] + '\n' + googlesMavenRepo;
+        // modify the part of the string that is after 'allprojects'
+        secondHalfOfFile = secondHalfOfFile.replace(/^(\s*)jcenter\(\)/m, modifiedLine);
+
+        // recombine the modified line
+        buildGradle = firstHalfOfFile + secondHalfOfFile;
+    } else {
+        // this should not happen, but if it does, we should try to add the dependency to the buildscript
+        match = buildGradle.match(/^(\s*)jcenter\(\)/m);
+        var googlesMavenRepo = whitespace + 'google() // Google\'s Maven repository from cordova-plugin-firebase';
+        modifiedLine = match[0] + '\n' + googlesMavenRepo;
+        // modify the part of the string that is after 'allprojects'
+        buildGradle = buildGradle.replace(/^(\s*)jcenter\(\)/m, modifiedLine);
+    }
+  }
+  console.log("buildGradle: 2 "+buildGradle);
   return buildGradle;
 }
 
