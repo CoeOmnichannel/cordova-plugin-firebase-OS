@@ -50,7 +50,7 @@
       </intent-filter>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <service android:name="org.apache.cordova.firebase.FirebasePluginMessagingService" android:stopWithTask="false">
+      <service android:exported="false" android:name="org.apache.cordova.firebase.FirebasePluginMessagingService" android:stopWithTask="false">
         <intent-filter>
           <action android:name="com.google.firebase.MESSAGING_EVENT"/>
         </intent-filter>
@@ -77,7 +77,7 @@
     <framework src="com.google.firebase:firebase-auth:20.0.2" />
     <framework src="com.google.firebase:firebase-crashlytics:17.3.0" />
     <framework src="com.google.firebase:firebase-crashlytics-ndk:17.3.0" />
-    <framework src="com.google.firebase:firebase-messaging:21.0.1" />  
+    <framework src="com.google.firebase:firebase-messaging:21.0.1" />
     <framework src="com.google.firebase:firebase-config:20.0.2" />
     <framework src="com.google.firebase:firebase-perf:19.1.0" />
     <framework src="com.google.firebase:firebase-dynamic-links:19.1.1" />

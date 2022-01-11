@@ -8,9 +8,6 @@ buildscript {
   repositories {
     google()
     jcenter()
-    maven {
-      url 'https://maven.fabric.io/public'
-    }
   }
   dependencies {
     classpath 'com.google.gms:google-services:4.3.4'
@@ -34,5 +31,5 @@ dependencies {
 
 cdvPluginPostBuildExtras.add({
   apply plugin: 'com.google.gms.google-services'
-  apply plugin: 'io.fabric'
+  apply plugin: 'com.google.firebase.crashlytics'
 })
