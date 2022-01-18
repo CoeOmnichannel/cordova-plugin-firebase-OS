@@ -31,6 +31,10 @@ function addDependencies(buildGradle, context) {
   } else {
     regex = /^(\s*)classpath "com.android.tools.build(.*)/m;
   }
+  // find the known line to match
+  var match = buildGradle.match(regex);
+  var whitespace = match[1];
+	
   var googlePlayDependency;
   var fabricDependency;
   if (sdk <= 30) {
