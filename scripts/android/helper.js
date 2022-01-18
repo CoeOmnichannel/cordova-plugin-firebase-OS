@@ -37,13 +37,9 @@ function addDependencies(buildGradle, context) {
 	
   var googlePlayDependency;
   var fabricDependency;
-  if (sdk <= 30) {
-    googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
-    fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase';
-  } else {
-	googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
-	fabricDependency = whitespace + 'classpath \'com.google.firebase:firebase-crashlytics-gradle:2.4.1\' // fabric dependency from cordova-plugin-firebase';
-  }
+	
+  googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
+  fabricDependency = whitespace + 'classpath \'com.google.firebase:firebase-crashlytics-gradle:2.4.1\' // fabric dependency from cordova-plugin-firebase';
 
   var modifiedLine = match[0] + '\n' + googlePlayDependency + '\n' + fabricDependency;
   
