@@ -20,30 +20,37 @@ function readRootBuildGradle() {
  */
 function addDependencies(buildGradle, context) {
   // find the known line to match
-  var match = buildGradle.match(/^(\s*)classpath 'com.android.tools.build(.*)/m);
-  var whitespace = match[1];
+  /*var match = buildGradle.match(/^(\s*)classpath 'com.android.tools.build(.*)/m);
+  var whitespace = match[1];*/
   
   // modify the line to add the necessary dependencies
   var sdk = utils.getAndroidTargetSdk(context);
+  var regex;
+  if (sdk <= 30) {
+    regex = /^(\s*)classpath 'com.android.tools.build(.*)/m;
+  } else {
+    regex = /^(\s*)classpath "com.android.tools.build(.*)/m;
+  }
+  // find the known line to match
+  var match = buildGradle.match(regex);
+  var whitespace = match[1];
+	
   var googlePlayDependency;
   var fabricDependency;
-  if (sdk >= 28) {
-    googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
-    fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.31.2\' // fabric dependency from cordova-plugin-firebase'
-  } else {
-    googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.1.0\' // google-services dependency from cordova-plugin-firebase';
-    fabricDependency = whitespace + 'classpath \'io.fabric.tools:gradle:1.25.4\' // fabric dependency from cordova-plugin-firebase'
-  }
+	
+  googlePlayDependency = whitespace + 'classpath \'com.google.gms:google-services:4.3.3\' // google-services dependency from cordova-plugin-firebase';
+  fabricDependency = whitespace + 'classpath \'com.google.firebase:firebase-crashlytics-gradle:2.4.1\' // fabric dependency from cordova-plugin-firebase';
 
   var modifiedLine = match[0] + '\n' + googlePlayDependency + '\n' + fabricDependency;
   
   // modify the actual line
-  return buildGradle.replace(/^(\s*)classpath 'com.android.tools.build(.*)/m, modifiedLine);
+  return buildGradle.replace(regex, modifiedLine);
 }
 
 /*
  * Add 'google()' and Crashlytics to the repository repo list
  */
+ /*
 function addRepos(buildGradle) {
   // find the known line to match
   var match = buildGradle.match(/^(\s*)jcenter\(\)/m);
@@ -84,6 +91,7 @@ function addRepos(buildGradle) {
 
   return buildGradle;
 }
+*/
 
 /*
  * Helper function to write to the build.gradle that sits at the root of the project
@@ -107,7 +115,7 @@ module.exports = {
     buildGradle = addDependencies(buildGradle, context);
   
     // Add Google's Maven Repo
-    buildGradle = addRepos(buildGradle);
+    //buildGradle = addRepos(buildGradle);
 
     writeRootBuildGradle(buildGradle);
   },
