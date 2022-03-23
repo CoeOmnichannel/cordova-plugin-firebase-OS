@@ -7,7 +7,8 @@
   <license>MIT</license>
 
   <engines>
-    <engine name="cordova" version=">=3.2.0" />
+   <engine name="cordova" version=">=6.4.0" />
+   <!-- <engine name="cordova" version=">=3.2.0" /> -->
   </engines>
 
   <js-module name="FirebasePlugin" src="www/firebase.js">
