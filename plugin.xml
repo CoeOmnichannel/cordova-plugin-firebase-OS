@@ -38,7 +38,7 @@
       <uses-permission android:name="android.permission.WAKE_LOCK" />
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <service android:enabled="true" android:exported="false" android:name="com.google.android.gms.measurement.AppMeasurementService" />
+      <service android:enabled="true" android:exported="true" android:name="com.google.android.gms.measurement.AppMeasurementService" />
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application/activity">
       <intent-filter>
