@@ -7,10 +7,12 @@ android {
 buildscript {
   repositories {
     google()
+    maven { url "https://maven.google.com" }
     jcenter()
-    maven {
+   /* maven {
       url 'https://maven.fabric.io/public'
     }
+    */
   }
   dependencies {
     classpath 'com.google.gms:google-services:4.3.4'
@@ -22,10 +24,11 @@ buildscript {
 
 repositories {
   google()
+  maven { url "https://maven.google.com" }
   mavenCentral()
-  maven {
+ /* maven {
     url "https://maven.google.com"
-  }
+  }*/
 }
 
 dependencies {
