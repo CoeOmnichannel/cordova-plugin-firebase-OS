@@ -1,43 +1,20 @@
-android {
-  compileSdkVersion 27
-  buildToolsVersion '27.0.3'
-  defaultConfig {
-    multiDexEnabled true
-  }
-}
-
 buildscript {
-  repositories {
-    google()
-    jcenter()
-    mavenCentral()
-  }
-  dependencies {
-    classpath 'com.google.gms:google-services:4.3.+'
-     classpath 'com.android.tools.build:gradle:3.+'
-    classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
-   }
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.+'
+        classpath 'com.google.gms:google-services:4.3.+'
+    }
 }
 
-
-repositories {
-  google()
-  mavenCentral()
-  maven { url "https://maven.google.com" } //test
- /* maven {
-    url "https://maven.google.com"
-  }*/
-}
-
-dependencies {
-  implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
-}
-
-cdvPluginPostBuildExtras.add({
-  apply plugin: 'com.google.gms.google-services'
-  apply plugin: 'com.google.firebase.crashlytics'
-})
-
+// use postBuildExtras to make sure the plugin is applied after
+// cdvPluginPostBuildExtras. Therefore if googleServices is added
+// to cdvPluginPostBuildExtras somewhere else, the plugin execution
+// will be skipped and project build will be successfull
 ext.postBuildExtras = {
     if (project.extensions.findByName('googleServices') == null) {
         // apply plugin: 'com.google.gms.google-services'
@@ -46,5 +23,3 @@ ext.postBuildExtras = {
         googleServices.disableVersionCheck = true
     }
 }
-
-apply plugin: 'com.android.application'
