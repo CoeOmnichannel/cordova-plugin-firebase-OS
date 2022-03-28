@@ -14,8 +14,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    //classpath 'com.google.gms:google-services:4.3.0'
-    classpath 'com.google.gms:google-services:4.1.0'
+    classpath 'com.google.gms:google-services:4.3.+'
     classpath 'com.android.tools.build:gradle:4.1.1'
     classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
    }
@@ -44,5 +43,3 @@ cdvPluginPostBuildExtras.add({
   
 })
 apply plugin: 'com.android.application'
-
-googleServices { disableVersionCheck = true }
