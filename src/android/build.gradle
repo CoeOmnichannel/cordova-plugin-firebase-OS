@@ -1,4 +1,6 @@
 android {
+  compileSdkVersion 27
+  buildToolsVersion '27.0.3'
   defaultConfig {
     multiDexEnabled true
   }
@@ -36,6 +38,6 @@ cdvPluginPostBuildExtras.add({
   apply plugin: 'com.google.gms.google-services'
   apply plugin: 'com.google.firebase.crashlytics'
 })
-
+apply plugin: 'com.android.application'
 com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
-oogleServices.disableVersionCheck = true
+googleServices.disableVersionCheck = true
