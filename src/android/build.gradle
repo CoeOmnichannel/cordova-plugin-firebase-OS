@@ -9,14 +9,12 @@ android {
 buildscript {
   repositories {
     google()
-    maven { url "https://maven.google.com" }//teste
-    //jcenter()
+    jcenter()
     mavenCentral()
   }
   dependencies {
-    //classpath 'com.google.gms:google-services:4.3.4'
-    classpath 'com.google.gms:google-services:4.1.0'
-    classpath 'com.android.tools.build:gradle:4.1.1'
+    classpath 'com.google.gms:google-services:4.3.+'
+     classpath 'com.android.tools.build:gradle:3.+'
     classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
    }
 }
@@ -39,4 +37,14 @@ cdvPluginPostBuildExtras.add({
   apply plugin: 'com.google.gms.google-services'
   apply plugin: 'com.google.firebase.crashlytics'
 })
+
+ext.postBuildExtras = {
+    if (project.extensions.findByName('googleServices') == null) {
+        // apply plugin: 'com.google.gms.google-services'
+        // class must be used instead of id(string) to be able to apply plugin from non-root gradle file
+        apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
+        googleServices.disableVersionCheck = true
+    }
+}
+
 apply plugin: 'com.android.application'
