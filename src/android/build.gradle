@@ -39,4 +39,3 @@ cdvPluginPostBuildExtras.add({
   apply plugin: 'com.google.firebase.crashlytics'
 })
 apply plugin: 'com.android.application'
-googleServices.disableVersionCheck = true
